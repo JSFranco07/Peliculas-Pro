@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:peliculas_definitivo/src/models/pelicula_model.dart';
-import 'package:peliculas_definitivo/src/pages/pagesPrueba/pelicula_page.dart';
-import 'package:peliculas_definitivo/src/pages/pagesPrueba/prueba_page.dart';
+import 'package:peliculas_definitivo/src/pages/pelicula_page.dart';
 import 'package:peliculas_definitivo/src/pages/pelicula_detalle_page.dart';
 import 'package:peliculas_definitivo/src/pages/principal_page.dart';
+import 'package:peliculas_definitivo/src/pages/series_page.dart';
 import 'package:peliculas_definitivo/src/utils/bottom_navigation.dart';
 
 class TabNavigatorRoutes {
@@ -60,7 +60,7 @@ class TabNavigator extends StatelessWidget {
       };
     } else{
       return{
-        TabNavigatorRoutes.inicio: (context) => PruebaPage(
+        TabNavigatorRoutes.inicio: (context) => SeriePage(
         ),
       };
     }

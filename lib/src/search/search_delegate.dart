@@ -6,6 +6,9 @@ class DataSearch extends SearchDelegate{
 
   String seleccion = '';
   final peliculasProvider = new PeliculasProvider();
+  final ValueChanged<Pelicula> onPush;
+
+  DataSearch({@required this.onPush});
 
   final peliculas = [
     'Spiderman',
@@ -92,7 +95,7 @@ class DataSearch extends SearchDelegate{
                 onTap: (){
                   close(context, null);
                   pelicula.uniqueId = '';
-                  Navigator.pushNamed(context, 'detalle', arguments: pelicula);
+                  onPush(pelicula);
                 },
               );
             }).toList(),

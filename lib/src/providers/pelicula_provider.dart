@@ -22,8 +22,21 @@ class PeliculasProvider{
 
   Stream<List<Pelicula>> get popularesStream => _popularesStreamController.stream;
 
+  //Peliculas Similares
+  int _similaresPage = 0;
+  bool _cargandoSimilares = false;
+
+  List<Pelicula> _similares = new List();
+
+  final _similaresStreamController = StreamController<List<Pelicula>>.broadcast();
+
+  Function(List<Pelicula>) get similaresSink => _similaresStreamController.sink.add;
+
+  Stream<List<Pelicula>> get similaresStream => _similaresStreamController.stream;
+
   void disposeStream(){
     _popularesStreamController?.close();
+    _similaresStreamController?.close();
   }
 
   Future<List<Pelicula>> _procesarRespuesta(Uri url) async {
@@ -92,12 +105,25 @@ class PeliculasProvider{
 
   Future <List<Pelicula>> getSimilares(String peliId) async{
 
+    if(_cargandoSimilares) return [];
+
+    _cargandoSimilares = true;
+    _similaresPage++;
+
     final url = Uri.https(_url, '3/movie/$peliId/similar', {
       'api_key'  : __apikey,
       'language' : _language,
+      'page'     : _similaresPage.toString(),
+      // 'movie_id' : peliId,
     });
 
-    return await _procesarRespuesta(url);
+    final resp = await _procesarRespuesta(url);
+
+    _similares.addAll(resp);
+    similaresSink(_similares);
+
+    _cargandoSimilares = false;
+    return resp;
   }
 
 }

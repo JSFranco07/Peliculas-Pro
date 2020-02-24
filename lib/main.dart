@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:peliculas_definitivo/src/pages/home_page.dart';
-import 'package:peliculas_definitivo/src/pages/pelicula_detalle_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,14 +10,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Peliculas',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       initialRoute: '/',
-      routes: {
-        '/': (BuildContext context ) => HomePage(),
-        'detalle': (BuildContext context ) => PeliculaDetalle(),
-      },     
+      home: HomePage(),   
     );
   }
 }

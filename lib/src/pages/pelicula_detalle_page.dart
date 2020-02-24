@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:peliculas_definitivo/src/models/pelicula_model.dart';
 import 'package:peliculas_definitivo/src/providers/pelicula_provider.dart';
 import 'package:peliculas_definitivo/src/models/actor_model.dart';
+import 'package:peliculas_definitivo/src/widgets/movie_horizontal_widget.dart';
 
 class PeliculaDetalle extends StatelessWidget {
 
   final Pelicula pelicula;
   final ValueChanged<Pelicula> onPush;
+  final peliculaProvider = PeliculasProvider();
 
   PeliculaDetalle({this.pelicula, this.onPush});
 
   @override
   Widget build(BuildContext context) {
+
+    peliculaProvider.getSimilares(pelicula.id.toString());
 
   //final Pelicula pelicula = ModalRoute.of(context).settings.arguments;
 
@@ -28,7 +32,8 @@ class PeliculaDetalle extends StatelessWidget {
                 _getTitulo(context, 'Reparto'),
                 _crearCasting(pelicula),
                 _getTitulo(context, 'Otras personas también buscan'),
-                _crearSimilares(pelicula),
+                //_crearSimilares(pelicula),
+                _footer(context),
                 SizedBox(height: 15.0,),
               ]
             ),
@@ -167,61 +172,92 @@ class PeliculaDetalle extends StatelessWidget {
   }
 
 
-  Widget _crearSimilares(Pelicula pelicula) {
-    final peliProvider = new PeliculasProvider();
+  // Widget _crearSimilares(Pelicula pelicula) {
+  //   final peliProvider = new PeliculasProvider();
 
-    return FutureBuilder(
-      future: peliProvider.getSimilares(pelicula.id.toString()),
-      builder: (context, AsyncSnapshot<List> snapshot) {
-        if(snapshot.hasData){
-          return _crearSimilaresPageView(snapshot.data);
-        } else{
-          return Center(child: CircularProgressIndicator(),);
-        }
-      },
-    );
-  }
+  //   return FutureBuilder(
+  //     future: peliProvider.getSimilares(pelicula.id.toString()),
+  //     builder: (context, AsyncSnapshot<List> snapshot) {
+  //       if(snapshot.hasData){
+  //         return _crearSimilaresPageView(snapshot.data);
+  //       } else{
+  //         return Center(child: CircularProgressIndicator(),);
+  //       }
+  //     },
+  //   );
+  // }
 
-  Widget _crearSimilaresPageView(List<Pelicula> peliculas) {
-    return SizedBox(
-      height: 190.0,
-      child: PageView.builder(
-        pageSnapping: false,
-        controller: PageController(
-          viewportFraction: 0.33,
-          initialPage: 1,
-        ),
-        itemCount: peliculas.length,
-        itemBuilder: (context, i) =>_similaresTarjeta(context, peliculas[i]),
-      ),
-    );
-  }
+  // Widget _crearSimilaresPageView(List<Pelicula> peliculas) {
+  //   return SizedBox(
+  //     height: 190.0,
+  //     child: PageView.builder(
+  //       pageSnapping: false,
+  //       controller: PageController(
+  //         viewportFraction: 0.33,
+  //         initialPage: 1,
+  //       ),
+  //       itemCount: peliculas.length,
+  //       itemBuilder: (context, i) =>_similaresTarjeta(context, peliculas[i]),
+  //     ),
+  //   );
+  // }
 
-  Widget _similaresTarjeta(context, Pelicula pelicula){
-    pelicula.uniqueId = '${pelicula.id}-similar';
+  // Widget _similaresTarjeta(context, Pelicula pelicula){
+  //   pelicula.uniqueId = '${pelicula.id}-similar';
 
+  //   return Container(
+  //     child: Column(
+  //       children: <Widget>[
+  //         Hero(
+  //           tag: pelicula.uniqueId,
+  //           child: ClipRRect(
+  //             borderRadius: BorderRadius.circular(20.0),
+  //             child: GestureDetector(
+  //               onTap: () => onPush(pelicula),
+  //               child: FadeInImage(
+  //                 image: NetworkImage(pelicula.getPosterImg()),
+  //                 placeholder: AssetImage('assets/img/no-image.jpg'),
+  //                 height: 170.0,
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         Text(
+  //           pelicula.title,
+  //           overflow: TextOverflow.ellipsis,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _footer( BuildContext context) {
     return Container(
+      width: double.infinity,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Hero(
-            tag: pelicula.uniqueId,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: GestureDetector(
-                onTap: () => onPush(pelicula),
-                child: FadeInImage(
-                  image: NetworkImage(pelicula.getPosterImg()),
-                  placeholder: AssetImage('assets/img/no-image.jpg'),
-                  height: 170.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+          Container(
+            padding: EdgeInsets.only(left: 20.0),
           ),
-          Text(
-            pelicula.title,
-            overflow: TextOverflow.ellipsis,
-          ),
+          SizedBox(height: 10.0,),
+          StreamBuilder(
+            stream: peliculaProvider.similaresStream,
+            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+
+              if(snapshot.hasData){
+                return MovieHorizontal (
+                  peliculas: snapshot.data,
+                  peliId: pelicula.id.toString(),
+                  siguientePagina: peliculaProvider.getSimilares,
+                  onPush: onPush,
+                );
+              } else{
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          )
         ],
       ),
     );

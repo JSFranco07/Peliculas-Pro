@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:peliculas_definitivo/src/models/pelicula_model.dart';
 import 'package:peliculas_definitivo/src/providers/pelicula_provider.dart';
 import 'package:peliculas_definitivo/src/search/search_delegate.dart';
+import 'package:peliculas_definitivo/src/utils/bottom_navigation.dart';
 import 'package:peliculas_definitivo/src/widgets/card_swiper_widget.dart';
 import 'package:peliculas_definitivo/src/widgets/movie_horizontal_widget.dart';
 
@@ -20,13 +21,14 @@ class PeliculaPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Peliculas en Cartelera'),
+        backgroundColor: tabColor[TabItem.peliculas],
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search), 
             onPressed: (){
               showSearch(
                 context: context, 
-                delegate: DataSearch(),
+                delegate: DataSearch(onPush: onPush),
               );
             }
           )

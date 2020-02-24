@@ -6,8 +6,9 @@ class MovieHorizontal extends StatelessWidget {
   final List<Pelicula> peliculas;
   final Function siguientePagina;
   final ValueChanged<Pelicula> onPush;
+  final String peliId;
 
-  MovieHorizontal ({@required this.peliculas, @required this.siguientePagina, @required this.onPush});
+  MovieHorizontal ({@required this.peliculas, @required this.siguientePagina, @required this.onPush, this.peliId});
 
   final _pageController = new PageController(
     initialPage: 1,
@@ -21,7 +22,11 @@ class MovieHorizontal extends StatelessWidget {
 
     _pageController.addListener(() {
       if(_pageController.position.pixels >= _pageController.position.maxScrollExtent - 50){
-        siguientePagina();
+        if(peliId == null){
+          siguientePagina();
+        } else{
+          siguientePagina(peliId);
+        }
       }
     });
 

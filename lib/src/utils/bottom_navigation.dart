@@ -11,8 +11,8 @@ Map<TabItem, String> tabName = {
 
 Map<TabItem, MaterialColor> tabColor ={
   TabItem.inicio: Colors.red,
-  TabItem.peliculas: Colors.green,
-  TabItem.series: Colors.blue
+  TabItem.peliculas: Colors.indigo,
+  TabItem.series: Colors.orange
 };
 
 //Asignar iconos a cada boton de la barra
